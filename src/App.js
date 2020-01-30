@@ -7,10 +7,10 @@ class App extends Component {
   render() {
     return (
       <div>
-        <Title/>
-          <section>
+        <Title />
+          <main>
             <Quiz />
-          </section>
+          </main>
         </div>
     );
   }

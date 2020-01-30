@@ -1,8 +1,7 @@
 import React from 'react';
 
 const Answers = (props) => {
-    console.log(props);
-    const { quiz, questionNumber } = props;
+    const { quiz, questionNumber, handleClick } = props;
 
     const randomIndex = Math.floor(Math.random() * 3);
 
@@ -22,9 +21,9 @@ const Answers = (props) => {
 
     return (
         <div>
-            <button>{Object.keys(quiz[questionNumber].answers[randomIndex])[0]}</button>
-            <button>{Object.keys(quiz[questionNumber].answers[index2])[0]}</button>
-            <button>{Object.keys(quiz[questionNumber].answers[index3])[0]}</button>
+            <button id={questionNumber} onClick={handleClick}>{Object.keys(quiz[questionNumber].answers[randomIndex])[0]}</button>
+            <button id={questionNumber} onClick={handleClick}>{Object.keys(quiz[questionNumber].answers[index2])[0]}</button>
+            <button id={questionNumber} onClick={handleClick}>{Object.keys(quiz[questionNumber].answers[index3])[0]}</button>
         </div>
     );
 };
