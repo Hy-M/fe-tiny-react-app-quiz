@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Answers from "./Answers";
+import Circles from "./Circles";
 
 class Quiz extends Component {
   state = {
@@ -35,17 +36,50 @@ class Quiz extends Component {
           { Tall: false },
           { "Quite tall": false }
         ]
+      },
+      {
+        question: "q6?",
+        answers: [
+          { "Code on v8 engine": false },
+          { "Cats only validate emotions": false },
+          { "Closed over variable environment": true }
+        ]
+      },
+      {
+        question: "q7?",
+        answers: [{ LOLCode: true }, { LollyGag: false }, { Ratoon: false }]
+      },
+      {
+        question: "q8",
+        answers: [{ Yes: true }, { "Probably not": false }, { Maybe: false }]
+      },
+      {
+        question: "q9",
+        answers: [
+          { Tall: true },
+          { "Really tall": false },
+          { "Quite tall": false }
+        ]
+      },
+      {
+        question: "q10",
+        answers: [
+          { Tall: true },
+          { "Really tall": false },
+          { "Quite tall": false }
+        ]
       }
     ],
     results: [],
     questionNumber: 0,
-    roundIsFinished: false
+    roundIsFinished: false,
+    levelNumber: 1
   };
 
   handleClick = clickEvent => {
-    let currentQuestion = clickEvent.target.id; // which question is being asked
-    let answers = this.state.quiz[currentQuestion].answers; // get the answers for that specific q
-    let usersAnswer = clickEvent.target.textContent; // button the user clicked for their answer
+    let currentQuestion = clickEvent.target.id; 
+    let answers = this.state.quiz[currentQuestion].answers; 
+    let usersAnswer = clickEvent.target.textContent;
 
     answers.forEach(obj => {
       if (usersAnswer in obj) {
@@ -54,20 +88,18 @@ class Quiz extends Component {
             currentState => {
               let newQuestionNum;
               let newRoundIsFinished;
-              if (currentState.questionNumber !== 4) {
+              if (![4, 9].includes(currentState.questionNumber)) {
                 newQuestionNum = currentState.questionNumber + 1;
               } else {
-                newQuestionNum = currentState.questionNumber;
-                newRoundIsFinished = !currentState.roundIsFinished;
+                newQuestionNum = currentState.questionNumber + 1;
+                newRoundIsFinished = true;
+                currentState.levelNumber = currentState.levelNumber + 1
               }
               return {
                 results: [...currentState.results, "green"],
                 questionNumber: newQuestionNum,
                 roundIsFinished: newRoundIsFinished
               };
-            },
-            () => {
-              console.log(this.state);
             }
           );
         } else {
@@ -75,20 +107,18 @@ class Quiz extends Component {
             currentState => {
               let newQuestionNum;
               let newRoundIsFinished;
-              if (currentState.questionNumber !== 4) {
+              if (![4, 9].includes(currentState.questionNumber)) {
                 newQuestionNum = currentState.questionNumber + 1;
               } else {
-                newQuestionNum = currentState.questionNumber;
-                newRoundIsFinished = !currentState.roundIsFinished;
+                newQuestionNum = currentState.questionNumber + 1;
+                newRoundIsFinished = true;
+                currentState.levelNumber = currentState.levelNumber + 1
               }
               return {
                 results: [...currentState.results, "red"],
                 questionNumber: newQuestionNum,
                 roundIsFinished: newRoundIsFinished
               };
-            },
-            () => {
-              console.log(this.state);
             }
           );
         }
@@ -97,7 +127,7 @@ class Quiz extends Component {
   };
 
   render() {
-    const { questionNumber, quiz, results, roundIsFinished } = this.state;
+    const { questionNumber, quiz, results, roundIsFinished, levelNumber } = this.state;
     let score = 0;
     results.forEach(result => {
       if (result === "green") score++;
@@ -109,7 +139,8 @@ class Quiz extends Component {
         <div>
           <h6>ROUND OVER</h6>
           <h3> You scored {score} out of 5</h3>
-          <button>Begin Level 2</button>
+          <Circles results={results} questionNumber={questionNumber}/>
+          <button onClick={() => this.setState({roundIsFinished: false, results: []})}>Begin Level {levelNumber}</button>
         </div>
       );
     } else {
@@ -122,28 +153,7 @@ class Quiz extends Component {
             questionNumber={questionNumber}
             handleClick={this.handleClick}
           />
-          <section>
-            <div
-              className={results[0] ? results[0] : "circle"}
-              id={questionNumber}
-            ></div>
-            <div
-              className={results[1] ? results[1] : "circle"}
-              id={questionNumber}
-            ></div>
-            <div
-              className={results[2] ? results[2] : "circle"}
-              id={questionNumber}
-            ></div>
-            <div
-              className={results[3] ? results[3] : "circle"}
-              id={questionNumber}
-            ></div>
-            <div
-              className={results[4] ? results[4] : "circle"}
-              id={questionNumber}
-            ></div>
-          </section>
+         <Circles results={results} questionNumber={questionNumber}/>
         </div>
       );
     }
