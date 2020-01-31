@@ -81,10 +81,11 @@ class Quiz extends Component {
     let answers = this.state.quiz[currentQuestion].answers; 
     let usersAnswer = clickEvent.target.textContent;
 
-    answers.forEach(obj => {
+    answers.forEach(obj => { 
       if (usersAnswer in obj) {
-        if (obj[usersAnswer] === true) {
-          this.setState(
+        let color = '';
+        obj[usersAnswer] === true ? color = 'green' : color = 'red';
+        this.setState(
             currentState => {
               let newQuestionNum;
               let newRoundIsFinished;
@@ -96,32 +97,12 @@ class Quiz extends Component {
                 currentState.levelNumber = currentState.levelNumber + 1
               }
               return {
-                results: [...currentState.results, "green"],
+                results: [...currentState.results, color],
                 questionNumber: newQuestionNum,
                 roundIsFinished: newRoundIsFinished
               };
             }
           );
-        } else {
-          this.setState(
-            currentState => {
-              let newQuestionNum;
-              let newRoundIsFinished;
-              if (![4, 9].includes(currentState.questionNumber)) {
-                newQuestionNum = currentState.questionNumber + 1;
-              } else {
-                newQuestionNum = currentState.questionNumber + 1;
-                newRoundIsFinished = true;
-                currentState.levelNumber = currentState.levelNumber + 1
-              }
-              return {
-                results: [...currentState.results, "red"],
-                questionNumber: newQuestionNum,
-                roundIsFinished: newRoundIsFinished
-              };
-            }
-          );
-        }
       }
     });
   };
@@ -134,7 +115,6 @@ class Quiz extends Component {
     });
 
     if (roundIsFinished === true) {
-      //ADD FUNCTIONALITY TO THE BEGIN LEVEL 2 BUTTON TO MAKE IT GO BACK TO QUESTIONS (roundIsFinished should be false)
       return (
         <div>
           <h6>ROUND OVER</h6>
