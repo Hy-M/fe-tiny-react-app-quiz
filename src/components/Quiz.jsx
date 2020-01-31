@@ -80,59 +80,71 @@ class Quiz extends Component {
   };
 
   handleClick = clickEvent => {
-    let currentQuestion = clickEvent.target.id; 
-    let answers = this.state.quiz[currentQuestion].answers; 
+    let currentQuestion = clickEvent.target.id;
+    let answers = this.state.quiz[currentQuestion].answers;
     let usersAnswer = clickEvent.target.textContent;
 
-    answers.forEach(obj => { 
+    answers.forEach(obj => {
       if (usersAnswer in obj) {
-        let color = '';
-        obj[usersAnswer] === true ? color = 'green' : color = 'red';
+        let color = "";
+        obj[usersAnswer] === true ? (color = "green") : (color = "red");
         this.setState(
-            currentState => {
-              let newQuestionNum = currentState.questionNumber;
-              let newRoundIsFinished;
-              let playerTurn;
-              if (currentState.player1Turn) {
-                  playerTurn = 'results1'
-              } else {
-                  playerTurn = 'results2'
-              }
-              if (![4, 9].includes(currentState.questionNumber)) {
-                  if (currentState.results1.length !== currentState.results2.length ) {
-                       newQuestionNum++;
-                  }
-              } else {
-                if (currentState.results1.length !== currentState.results2.length ) {
-                    newQuestionNum++;
-                    newRoundIsFinished = true;
-                    currentState.levelNumber = currentState.levelNumber + 1
-               }
-              
-              }
-              return {
-                player1Turn: !currentState.player1Turn,
-                [playerTurn]: [...currentState[playerTurn], color],
-                questionNumber: newQuestionNum,
-                roundIsFinished: newRoundIsFinished
-              };
+          currentState => {
+            let newQuestionNum = currentState.questionNumber;
+            let newRoundIsFinished;
+            let playerTurn;
+            if (currentState.player1Turn) {
+              playerTurn = "results1";
+            } else {
+              playerTurn = "results2";
             }
+            if (![4, 9].includes(currentState.questionNumber)) {
+              if (
+                currentState.results1.length !== currentState.results2.length
+              ) {
+                newQuestionNum++;
+              }
+            } else {
+              if (
+                currentState.results1.length !== currentState.results2.length
+              ) {
+                newQuestionNum++;
+                newRoundIsFinished = true;
+                currentState.levelNumber = currentState.levelNumber + 1;
+              }
+            }
+            return {
+              player1Turn: !currentState.player1Turn,
+              [playerTurn]: [...currentState[playerTurn], color],
+              questionNumber: newQuestionNum,
+              roundIsFinished: newRoundIsFinished
+            };
+          },
+          () => {
+            console.log(this.state);
+          }
         );
       }
     });
   };
 
   render() {
-    const { questionNumber, quiz, results1, results2, roundIsFinished, levelNumber } = this.state;
+    const {
+      questionNumber,
+      quiz,
+      results1,
+      results2,
+      roundIsFinished,
+      levelNumber
+    } = this.state;
     let score1 = 0;
-    let score2= 0;
+    let score2 = 0;
     results1.forEach(result => {
       if (result === "green") score1++;
     });
     results2.forEach(result => {
-        if (result === "green") score2++;
-      });
-    
+      if (result === "green") score2++;
+    });
 
     if (roundIsFinished === true) {
       return (
@@ -140,8 +152,22 @@ class Quiz extends Component {
           <h6>ROUND OVER</h6>
           <h3> Player 1 scored {score1} out of 5</h3>
           <h3> Player 2 scored {score2} out of 5</h3>
-          <Circles results1={results1} results2={results2} questionNumber={questionNumber}/>
-          <button onClick={() => this.setState({roundIsFinished: false, results1: [], results2: []})}>Begin Level {levelNumber}</button>
+          <Circles
+            results1={results1}
+            results2={results2}
+            questionNumber={questionNumber}
+          />
+          <button
+            onClick={() =>
+              this.setState({
+                roundIsFinished: false,
+                results1: [],
+                results2: []
+              })
+            }
+          >
+            Begin Level {levelNumber}
+          </button>
         </div>
       );
     } else {
@@ -154,7 +180,12 @@ class Quiz extends Component {
             questionNumber={questionNumber}
             handleClick={this.handleClick}
           />
-         <Circles results1={results1} results2={results2} questionNumber={questionNumber}/>
+
+          <Circles
+            results1={results1}
+            results2={results2}
+            questionNumber={questionNumber}
+          />
         </div>
       );
     }
